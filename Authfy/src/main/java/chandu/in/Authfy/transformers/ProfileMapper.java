@@ -1,6 +1,7 @@
 package chandu.in.Authfy.transformers;
 
 import chandu.in.Authfy.dto.ProfileRequest;
+import chandu.in.Authfy.dto.ProfileResponse;
 import chandu.in.Authfy.dto.UserEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,5 +30,15 @@ public class ProfileMapper {
                 .resetOtpExpireAt(0L)
                 .build();
 
+    }
+
+    public ProfileResponse createProfileResponse(UserEntity user) {
+
+        return ProfileResponse.builder()
+                .name(user.getName())
+                .email(user.getEmail())
+                .userId(user.getUserId())
+                .isAccountVerified(user.getIsAccountVerified())
+                .build();
     }
 }

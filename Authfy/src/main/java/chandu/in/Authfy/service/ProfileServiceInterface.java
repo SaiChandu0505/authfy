@@ -1,8 +1,11 @@
 package chandu.in.Authfy.service;
 
 import chandu.in.Authfy.dto.ProfileRequest;
+import chandu.in.Authfy.dto.ProfileResponse;
 
 public interface ProfileServiceInterface {
 
-    void registerUser(ProfileRequest request);
+    ProfileResponse registerUser(ProfileRequest request);
+
+    ProfileResponse getProfile(String email);
 }

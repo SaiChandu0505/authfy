@@ -1,6 +1,5 @@
 package chandu.in.Authfy.controller;
 
-import chandu.in.Authfy.Util.Errorutil;
 import chandu.in.Authfy.dto.ProfileRequest;
 import chandu.in.Authfy.dto.ProfileResponse;
 import chandu.in.Authfy.service.MailService;
@@ -20,20 +19,27 @@ import org.springframework.web.bind.annotation.*;
 public class ProfileController {
     private final ProfileServiceInterface profileServiceInterface;
     private final MailService mailService;
-    private final Errorutil util;
 
     @PostMapping("/user-register")
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ProfileResponse> userRegister(@Valid @RequestBody ProfileRequest request) {
+        log.info("Register request received for email: {}", request.getEmail());
 
         ProfileResponse response = profileServiceInterface.registerUser(request);
         mailService.sendWelcomeEmail(response.getEmail(), response.getName());
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
+        log.info("User registered successfully with email: {}", response.getEmail());
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    /**
+     * Fetches profile details for the logged-in user.
+     */
     @GetMapping("/user-profile")
-    public ProfileResponse getProfile(@CurrentSecurityContext(expression = "authentication?.name") String email) {
-        return profileServiceInterface.getProfile(email);
+    public ResponseEntity<ProfileResponse> getProfile(
+            @CurrentSecurityContext(expression = "authentication?.name") String email) {
+        log.info("Fetching profile for user: {}", email);
+
+        ProfileResponse profile = profileServiceInterface.getProfile(email);
+        return ResponseEntity.ok(profile);
     }
 }
